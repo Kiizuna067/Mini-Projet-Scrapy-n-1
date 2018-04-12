@@ -1,0 +1,4 @@
+Extrait l'url du contact (a complet) :
+	response.xpath('//a[contains(@href, "https://www.irif.fr/~lboczko/")]').extract()
+	
+Extraire le bloc <p> necessaire => Il contient le nom du séminaire, sa date, son heure et la salle

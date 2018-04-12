@@ -1,0 +1,1 @@
+Search.setIndex({docnames:["index"],envversion:51,filenames:["index.rst"],objects:{},objnames:{},objtypes:{},terms:{here:0,index:0,littl:0,modul:0,page:0,project:0,scrapi:0,search:0},titles:["Welcome to Mini projet 1&#8217;s documentation!"],titleterms:{document:0,indic:0,mini:0,projet:0,tabl:0,welcom:0}})

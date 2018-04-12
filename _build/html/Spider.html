@@ -1,0 +1,210 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Spider Section &#8212; Mini projet 1  documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Welcome to Mini projet 1’s documentation!" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="spider-section">
+<h1>Spider Section<a class="headerlink" href="#spider-section" title="Permalink to this headline">¶</a></h1>
+<p>Here I will try to describe how I build the spider for the website :</p>
+<p><a class="reference external" href="https://www.irif.univ-paris-diderot.fr/seminaires/algo/index">Irif.univ-paris-diderot.fr</a></p>
+<div class="section" id="my-first-spider">
+<h2>My first spider<a class="headerlink" href="#my-first-spider" title="Permalink to this headline">¶</a></h2>
+<p>Contents</p>
+<blockquote>
+<div><ul class="simple">
+<li>Import</li>
+<li>Differents Parse</li>
+<li>Main Parse</li>
+</ul>
+</div></blockquote>
+<div class="section" id="import">
+<h3>Import<a class="headerlink" href="#import" title="Permalink to this headline">¶</a></h3>
+<p>I used three different import for this project. Each of them have been used and are necessary for the project.</p>
+<div class="section" id="scrapy">
+<h4>Scrapy<a class="headerlink" href="#scrapy" title="Permalink to this headline">¶</a></h4>
+<blockquote>
+<div>First of all I used &#8220;import scrapy&#8221; library. You need it to create a scrapy spider.</div></blockquote>
+</div>
+<div class="section" id="w3lib-html">
+<h4>w3lib.html<a class="headerlink" href="#w3lib-html" title="Permalink to this headline">¶</a></h4>
+<blockquote>
+<div>Then I called the w3lib.html library. It is a Python library and will allow us to remove all the html tag from the data we&#8217;ve parsed.</div></blockquote>
+</div>
+<div class="section" id="items">
+<h4>items<a class="headerlink" href="#items" title="Permalink to this headline">¶</a></h4>
+<blockquote>
+<div>Finaly I used an import item which is necessary to use the scrapy items functionnality.
+Scrapy items functionnality enable us to return an object to store the data and then export it to a CSV file.</div></blockquote>
+</div>
+</div>
+<div class="section" id="differents-parse">
+<h3>Differents Parse<a class="headerlink" href="#differents-parse" title="Permalink to this headline">¶</a></h3>
+<p>The parse was a little hard to organize. I divided it into 3 different parse for the data.
+Then I call those 3 parses into a main parse that will use them and store the data into an Item to export them.</p>
+<div class="section" id="parse-the-contact-name">
+<h4>Parse the contact name :<a class="headerlink" href="#parse-the-contact-name" title="Permalink to this headline">¶</a></h4>
+<p>The first one parse the name of the Contact throught the page. When it found the good data it store it into a variable.
+We will then use this variable and the w3lib.html library to remove all the tags around our data to keep only the text.
+Once it&#8217;s done we just return the contact variable</p>
+<blockquote>
+<div><div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_parse_Contact</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+        <span class="n">contact</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">xpath</span><span class="p">(</span><span class="s1">&#39;//a[@href=&quot;https://www.irif.fr/~lboczko/&quot;]&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">extract_first</span><span class="p">()</span>
+        <span class="n">contact</span> <span class="o">=</span> <span class="n">w3lib</span><span class="o">.</span><span class="n">html</span><span class="o">.</span><span class="n">remove_tags</span><span class="p">(</span><span class="n">contact</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">contact</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="found-the-next-seminar">
+<h4>Found the next seminar :<a class="headerlink" href="#found-the-next-seminar" title="Permalink to this headline">¶</a></h4>
+<p>The second parse extract an entire bloc which contains all the information about the next seminar.
+We extract all the bloc to have the name of the seminar, it date, hour and place</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_parse_PS</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+            <span class="n">PS</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">xpath</span><span class="p">(</span><span class="s1">&#39;//div[@id=&quot;plugin_include__seminaires__algocomp__db__futur&quot;//div[contains(@class,&quot;datatemplateentry&quot;)]/p[1]&#39;</span><span class="p">)</span>
+            <span class="n">PS</span> <span class="o">=</span> <span class="n">w3lib</span><span class="o">.</span><span class="n">html</span><span class="o">.</span><span class="n">remove_tags</span><span class="p">(</span><span class="n">PS</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">PS</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="security">
+<h4>Security :<a class="headerlink" href="#security" title="Permalink to this headline">¶</a></h4>
+<p>Finally the last one is just for security. We use a scrapy functionnality to show a message.
+This message will just reassure us on the execution of our spider.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_parse_logging</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Le loggeur fonctionne et le spider crawl&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="main-parse">
+<h3>Main Parse<a class="headerlink" href="#main-parse" title="Permalink to this headline">¶</a></h3>
+<p>In the main parse we will call all our precedent parse one by one and storing them into a variable.
+Each variable will in that case contains the data we needed.
+We then store the scraped data into an item using our items library provided by scrapy.
+Those new items will allow us to extract the data into a CSV file when we call our spider with the command.</p>
+<p><strong>scrapy crawl spiderName -t csv -o NameOfFile.csv</strong></p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+        <span class="n">contacte</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_Contact</span><span class="p">(</span><span class="n">response</span><span class="p">)</span> <span class="c1">#Call the parse contact</span>
+        <span class="n">Prochaine_Seance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_PS</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parse_logging</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+        <span class="n">contacte</span> <span class="o">=</span> <span class="n">TestItem</span><span class="p">(</span><span class="n">contactName</span><span class="o">=</span><span class="n">contacte</span><span class="p">)</span> <span class="c1">#Put the scraped data into an item</span>
+        <span class="n">Prochaine_Seance</span> <span class="o">=</span> <span class="n">TestItem</span><span class="p">(</span><span class="n">Ps</span> <span class="o">=</span> <span class="n">Prochaine_Seance</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">contacte</span><span class="p">,</span> <span class="n">Prochaine_Seance</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Spider Section</a><ul>
+<li><a class="reference internal" href="#my-first-spider">My first spider</a><ul>
+<li><a class="reference internal" href="#import">Import</a><ul>
+<li><a class="reference internal" href="#scrapy">Scrapy</a></li>
+<li><a class="reference internal" href="#w3lib-html">w3lib.html</a></li>
+<li><a class="reference internal" href="#items">items</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#differents-parse">Differents Parse</a><ul>
+<li><a class="reference internal" href="#parse-the-contact-name">Parse the contact name :</a></li>
+<li><a class="reference internal" href="#found-the-next-seminar">Found the next seminar :</a></li>
+<li><a class="reference internal" href="#security">Security :</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#main-parse">Main Parse</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to Mini projet 1&#8217;s documentation!</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/Spider.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, N.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="_sources/Spider.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
